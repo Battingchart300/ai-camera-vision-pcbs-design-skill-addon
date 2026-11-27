@@ -1,0 +1,91 @@
+{
+  "board": {
+    "fab": "jlcpcb",
+    "layers": 4,
+    "name": "Solar Camera Trap"
+  },
+  "camera": {
+    "ai": {
+      "model": "none",
+      "npu_tops_required": 0
+    },
+    "battery": {
+      "capacity_wh": 25.9,
+      "cells": 2,
+      "type": "Li-ion 18650"
+    },
+    "connectivity": {
+      "ethernet": false,
+      "lte": false,
+      "poe": false,
+      "wifi": true
+    },
+    "environment": {
+      "ip_rating": "IP66",
+      "operating_c_max": 60,
+      "operating_c_min": -20
+    },
+    "interface": {
+      "dphy_version": "1.1",
+      "lane_rate_gbps": 1.0,
+      "lanes": 2,
+      "type": "MIPI CSI-2"
+    },
+    "lens": {
+      "focal_length_mm": 3.04,
+      "ir_cut": false,
+      "mount": "M12"
+    },
+    "min_autonomy_days": 1,
+    "night_vision": {
+      "ir_led_count": 2,
+      "ir_led_nm": 850,
+      "pir": true
+    },
+    "power": {
+      "avg_w": 0.8,
+      "input_v": 5,
+      "peak_w": 5.0,
+      "source": "solar+battery"
+    },
+    "privacy": {
+      "cloud_upload_raw": false,
+      "face_recognition": false,
+      "faces_blurred": false,
+      "on_device_processing": true,
+      "public_space_surveillance": false,
+      "recording_trigger": "motion",
+      "retention_days": 7
+    },
+    "processor": {
+      "part": "BCM2712",
+      "platform": "Raspberry Pi 5"
+    },
+    "security": {
+      "default_password_changed": true,
+      "secure_boot": true,
+      "tls": true
+    },
+    "sensor": {
+      "bits_per_pixel": 10,
+      "fps": 10,
+      "height_px": 2464,
+      "lanes": 2,
+      "part": "IMX219",
+      "width_px": 3280
+    },
+    "solar": {
+      "panel_w": 5,
+      "sun_hours_day": 2
+    },
+    "storage": {
+      "capacity_gb": 128,
+      "type": "microSD"
+    },
+    "thermal": {
+      "ambient_max_c": 40,
+      "max_component_c": 70,
+      "thermal_resistance_c_per_w": 5.0
+    }
+  }
+}
