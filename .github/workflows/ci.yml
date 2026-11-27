@@ -1,0 +1,52 @@
+name: camera-vision-addon-ci
+
+# Runs pytest + the validators on all three examples, on Python
+# 3.10-3.13, plus a negative test: require_base must FAIL on a
+# misnamed base skill. The base skill is cloned because this
+# addon does not work without it (see SKILL.md §0).
+# Python 3.9 is NOT in the matrix: it is EOL since Oct 2025 and
+# setup-python has no 3.9 for ubuntu-latest (Ubuntu 26.04), so
+# every run would fail before any check ran.
+on: [push, pull_request]
+
+jobs:
+  kit:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install pytest
+        run: python -m pip install pytest
+      - name: Clone base skill (required)
+        run: git clone --depth 1 https://github.com/Battingchart300/ai-pcb-design-skill.git ../ai-pcb-design-skill
+      - name: Run pytest
+        run: python -m pytest tests/ -q
+      - name: Run validators on all examples
+        run: |
+          python scripts/run_all.py examples/solar_camera_trap.json
+          python scripts/run_all.py examples/industrial_mipi_camera.json
+          python scripts/run_all.py examples/edge_vision_pc.json
+      - name: Regression fixtures must FAIL
+        run: |
+          for f in examples/regression_*.json; do
+            if python scripts/run_all.py "$f"; then
+              echo "FAIL: $f passed but must fail"
+              exit 1
+            fi
+          done
+          echo "OK: all regression fixtures fail as expected"
+      - name: require_base must fail on a misnamed base
+        run: |
+          mkdir -p /tmp/misnamed-base
+          cp ../ai-pcb-design-skill/SKILL.md /tmp/misnamed-base/SKILL.md
+          sed -i 's/^name: ai-pcb-design-skill$/name: ai-pc-component-design-skill-addon/' /tmp/misnamed-base/SKILL.md
+          if python scripts/require_base.py --base-skill /tmp/misnamed-base; then
+            echo "FAIL: misnamed base skill was accepted"
+            exit 1
+          fi
+          echo "OK: misnamed base skill rejected (exit 2 as expected)"
